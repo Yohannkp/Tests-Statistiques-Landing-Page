@@ -29,6 +29,7 @@ option = st.sidebar.selectbox("Choisissez une analyse", [
     "Aperçu des données",
     "Analyse Exploratoire (EDA)",
     "Évolution du taux de conversion",
+    "Variation du taux de conversion par jour",
     "Tests statistiques",
     "Conclusions et recommandations"
 ])
@@ -69,6 +70,20 @@ elif option == "Évolution du taux de conversion":
     ax.set_title("Évolution du taux de conversion au fil du temps")
     ax.set_xlabel("Date")
     ax.set_ylabel("Taux de conversion")
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+    
+elif option == "Variation du taux de conversion par jour":
+    st.subheader("📈 Variation quotidienne du taux de conversion par groupe")
+    
+    df_time = df.set_index('timestamp')
+    daily_conversions = df_time.groupby(['group']).resample('D')['converted'].mean().reset_index()
+    
+    fig, ax = plt.subplots()
+    sns.lineplot(x='timestamp', y='converted', hue='group', data=daily_conversions, ax=ax)
+    ax.set_title("Daily Conversion Rate by Group Over Time")
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Daily Conversion Rate")
     plt.xticks(rotation=45)
     st.pyplot(fig)
     
